@@ -1,9 +1,19 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:3.7.0'
+    }
+}
 
 plugins {
     id 'java'
     id 'maven'
     id 'signing'
     id 'net.researchgate.release' version '2.6.0'
+    id "me.tatarka.retrolambda" version "3.7.0"
 }
 
 sourceCompatibility = 1.8

@@ -12,6 +12,7 @@ import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.net.ssl.SSLSocketFactory;
 
@@ -90,9 +91,11 @@ public class WebsocketTransport extends HttpClientTransport {
 
 		boolean isSsl = false;
 
-		String url = requestParams.keySet().stream()
-				.map(key -> key + "=" + encodeValue(requestParams.get(key)))
-				.collect(joining("&", connectionUrl + connectionString + "?", ""));
+		String url = connectionUrl + connectionString + "?";
+
+		for (Map.Entry<String, String> entry : requestParams.entrySet()) {
+			url += "&" + entry.getKey() + "=" + encodeValue(entry.getValue());
+		}
 
 		if (connection.getQueryString() != null) {
 			url += "&" + connection.getQueryString();
@@ -101,6 +104,7 @@ public class WebsocketTransport extends HttpClientTransport {
 		if (url.startsWith(SECURE_WEBSOCKET_SCHEME)) {
 			isSsl = true;
 		}
+
 
 		mConnectionFuture = new UpdateableCancellableFuture<Void>(null);
 
@@ -204,7 +208,7 @@ public class WebsocketTransport extends HttpClientTransport {
 
 		try {
 			if(value != null)
-				result = URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+				result = URLEncoder.encode(value, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
